@@ -63,12 +63,16 @@ namespace Quiz1
         {
             a = SimplifyFraction(a.numerator, a.denominator);
             b = SimplifyFraction(b.numerator, b.denominator);
-            return a.denominator == b.denominator && a.denominator == b.denominator);
+            return (a.denominator == b.denominator) && (a.denominator == b.denominator);
         }
 
         public static bool operator !=(Fraction a, Fraction b)
         {
             return !(a == b);
+        }
+        public override bool Equals(object? obj)
+        {
+            return base.Equals(obj);
         }
         public override string ToString()
         {
