@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using System;
 
 namespace Quiz1
 {
-    internal class Fraction
+    public class Fraction
     {
         private int numerator;
         private int denominator;
@@ -74,10 +71,15 @@ namespace Quiz1
         {
             return base.Equals(obj);
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
         public override string ToString()
         {
             string sign = this.getSign();
-            return $"{sign}{numerator / denominator}";
+            return $"{sign}{numerator}/{denominator}";
         }
         private string getSign()
         {
