@@ -1,54 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Quiz1
 {
     public class Person {
-        private int yearOfBirth;
-        private string name;
-        protected string IDNumber;
-        private string healthInfo;
+        protected int yearOfBirth;
+        protected string name;
+        protected string healthInfo;
 
-        public Person(int yearOfBirth, string name, string IDNumber, string healhInfo)
+        public Person(int yearOfBirth, string name, string healthInfo)
         {
             this.yearOfBirth = yearOfBirth;
             this.name = name;
-            this.IDNumber = IDNumber;
-            string healthInfo = healhInfo;
+            this.healthInfo = healthInfo;
         }
-
-        public string GetHealthStatus() {
-            return name + ": " + yearOfBirth + ". " + healthInfo;
-        }
-    
-
+        public string GetHealthStatus() { return name + ": " + yearOfBirth + ". " + healthInfo; }
     }
 
     public class Child : Person
     {
-        public Child(int yearOfBirth, string name, string IDNumber, string healhInfo) : base(yearOfBirth, name, IDNumber, healhInfo)
+        private  string childIDNumber;
+        public Child(int yearOfBirth, string name, string healhInfo, string childNumber) : base(yearOfBirth, name, healhInfo)
         {
+            this.childIDNumber = childNumber;
         }
 
-        public string ChildNumber {
-            get => this.IDNumber;
-            set => this.IDNumber = value;
+       
+        public override string ToString()
+        {
+            return $"{name} {childIDNumber}";
         }
     }
 
     public class Adult : Person
     {
-        public Adult(int yearOfBirth, string name, string IDNumber, string healhInfo) : base(yearOfBirth, name, IDNumber, healhInfo)
+        private string passportNumber;
+        public Adult(int yearOfBirth, string name, string healhInfo, string passportNumber) : base(yearOfBirth, name, healhInfo)
         {
+            this.passportNumber = passportNumber;
         }
-
-        public string passportNumber
+   
+        public override string ToString()
         {
-            get => this.IDNumber;
-            set => this.IDNumber = value;
+            return $"{this.name} {this.passportNumber}";
         }
     }
 }

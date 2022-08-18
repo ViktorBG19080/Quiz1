@@ -1,118 +1,66 @@
-﻿using System.Linq;
-using System;
-
-namespace Quiz1
+﻿public class Fraction
 {
-    public class Fraction
+    private readonly int numerator;
+    private readonly int denominator;
+    public readonly int sign;
+
+    public Fraction(int numerator, int denominator)
     {
-        private int numerator;
-        private int denominator;
-
-        public Fraction(int numerator, int denominator)
-        {
-            this.numerator = numerator;
-            this.denominator = denominator;
-        }
-
-        private Fraction(int[] a)
-        {
-            this.numerator = a[0];
-            this.denominator = a[1];
-        }
-
-        public static Fraction operator +(Fraction a, Fraction b)
-        {
-            int resultNumerator = a.numerator * b.denominator + b.numerator * a.denominator;
-            int resultDenominator = a.denominator * b.denominator;
-            return SimplifyFraction(resultNumerator, resultDenominator);
-        }
-
-
-        public static Fraction operator -(Fraction a, Fraction b)
-        {
-            int resultNumerator = a.numerator * b.denominator - b.numerator * a.denominator;
-            int resultDenominator = a.denominator * b.denominator;
-            return SimplifyFraction(resultNumerator, resultDenominator);
-        }
-
-        public static Fraction operator !(Fraction a)
-        {
-            return new Fraction(a.denominator, a.numerator);
-        }
-        public static Fraction operator *(Fraction a, Fraction b)
-        {
-
-            int resultNumerator = a.numerator * b.denominator;
-            int resultDenominator = a.denominator * b.numerator;
-            return SimplifyFraction(resultNumerator, resultDenominator);
-
-        }
-
-        public static Fraction operator /(Fraction a, Fraction b)
-        {
-            int resultNumerator = a.numerator / a.denominator;
-            int resultDenominator = a.denominator / b.numerator;
-            return SimplifyFraction(resultNumerator, resultDenominator);
-
-        }
-
-        public static bool operator ==(Fraction a, Fraction b)
-        {
-            a = SimplifyFraction(a.numerator, a.denominator);
-            b = SimplifyFraction(b.numerator, b.denominator);
-            return (a.denominator == b.denominator) && (a.denominator == b.denominator);
-        }
-
-        public static bool operator !=(Fraction a, Fraction b)
-        {
-            return !(a == b);
-        }
-        public override bool Equals(object? obj)
-        {
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-        public override string ToString()
-        {
-            string sign = this.getSign();
-            return $"{sign}{numerator}/{denominator}";
-        }
-        private string getSign()
-        {
-            string sign = String.Empty;
-            if (this.numerator != this.denominator && (this.numerator < 0 || this.denominator < 0)) sign = "-";
-            return sign;
-        }
-
-        private static Fraction SimplifyFraction(int resultNumerator, int resultDenominator)
-        {
-            int[] simplifiedFraction = new int[] { resultNumerator, resultDenominator };
-            Simplify(simplifiedFraction);
-            return new Fraction(simplifiedFraction);
-        }
-        static private void Simplify(int[] numbers)
-        {
-            int gcd = GCD(numbers);
-            for (int i = 0; i < numbers.Length; i++)
-                numbers[i] /= gcd;
-        }
-        static private int GCD(int a, int b)
-        {
-            while (b > 0)
-            {
-                int rem = a % b;
-                a = b;
-                b = rem;
-            }
-            return a;
-        }
-        static private int GCD(int[] args)
-        {
-            return args.Aggregate((gcd, arg) => GCD(gcd, arg));
-        }
+        this.numerator = numerator;
+        this.denominator = denominator;
+        this.sign = GetSign(numerator, denominator);
     }
+
+    public static  Fraction operator +(Fraction f) => new Fraction (f.numerator,f.denominator);
+    public static Fraction operator -(Fraction f) => new Fraction(-f.numerator,f.denominator);
+    public static Fraction operator !(Fraction f) => new Fraction(f.denominator, f.numerator);
+    public static Fraction operator +(Fraction x, Fraction y) { 
+        Fraction sum= new Fraction (x.numerator*y.denominator + y.numerator*x.denominator, x.denominator* y.denominator);
+        return SimplifyFractin(sum);
+    }
+    public static Fraction operator -(Fraction x, Fraction y) {
+        Fraction sum = new Fraction(x.numerator * y.denominator - y.numerator*x.denominator, x.denominator * y.denominator);
+        return SimplifyFractin(sum);
+    }
+
+    public static Fraction operator *(Fraction x, Fraction y) {
+        Fraction result = new Fraction(x.numerator * y.numerator, x.denominator* y.denominator);
+        return SimplifyFractin(result);
+    }
+    public static Fraction operator /(Fraction x, Fraction y)
+    {
+        y = !y;
+        Fraction result = new Fraction(x.numerator * y.numerator, x.denominator * y.denominator);
+        return SimplifyFractin(result);
+    }
+
+    #region helper methods
+    private static Fraction SimplifyFractin(Fraction f) {
+        int x = f.numerator;
+        int y = f.denominator;
+        int greatestCommonDivisior = GetGreatestCommonDivisior(x,y);
+        x *= greatestCommonDivisior;
+        y *= greatestCommonDivisior;
+        return new Fraction(x, y);
+    }
+
+    private static int GetGreatestCommonDivisior(int x, int y)
+    {
+        if (y == 0) {
+            return x;
+           
+        }
+        return GetGreatestCommonDivisior(y, x % y);
+    }
+
+    private static int GetSign(int numerator, int denomerator) { 
+        int sign = 0;
+        int x = Math.Sign(numerator);
+        int y = Math.Sign(denomerator);
+
+        if ((x < 0 && y < 0) || (x > 0 && y > 0)) sign = 1;
+        if((x>0 && y<0)||(x<0&&y>0)) sign = -1;
+        return sign;
+    }
+    #endregion
 }
