@@ -53,5 +53,13 @@ namespace TestQuiz1
             f = +f;
             Assert.That(f.Numerator == -2 && f.Denominator == 5, $"nomerator = {f.Numerator} denumerator ={f.Denominator}");
         }
+
+        [Test]
+        public void TestUnaryPlusResultIsSimplified5()
+        {
+            Fraction f = new Fraction(-12*7*6*11, -12*5*6);
+            f = +f;
+            Assert.That(f.Numerator == 77 && f.Denominator == 5, $"nomerator = {f.Numerator} denumerator ={f.Denominator}");
+        }
     }
 }

@@ -7,7 +7,7 @@
     {
         if (denominator == 0) 
         {
-            throw new ArgumentException("Denominator cannot be null");
+            throw new ArgumentException("Denominator cannot be zero");
         }
         this.numerator = numerator;
         this.denominator = denominator;
@@ -25,7 +25,14 @@
 
     public static  Fraction operator +(Fraction f) => SimplifyFraction(f);
     public static Fraction operator -(Fraction f) => SimplifyFraction(new Fraction(-f.numerator,f.denominator));
-    public static Fraction operator !(Fraction f) => SimplifyFraction(new Fraction(f.denominator, f.numerator));
+    public static Fraction operator !(Fraction f) 
+    {
+        if (f.numerator == 0)
+        {
+            throw new InvalidOperationException("Denominator can not be zero.");
+        }
+        return SimplifyFraction(new Fraction(f.denominator, f.numerator)); 
+    }
     public static Fraction operator +(Fraction x, Fraction y) { 
         Fraction sum= new Fraction (x.numerator*y.denominator + y.numerator*x.denominator, x.denominator* y.denominator);
         return SimplifyFraction(sum);
