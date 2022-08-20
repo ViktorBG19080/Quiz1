@@ -5,12 +5,10 @@
 
     public Fraction(int numerator ,int denominator)
     {
-        if (denominator == 0) 
-        {
-            throw new ArgumentException("Denominator cannot be zero");
-        }
-        this.numerator = numerator;
-        this.denominator = denominator;
+
+        int[] simplifiedFraction= SimplifyFraction(numerator, denominator);
+        this.numerator = simplifiedFraction[0];
+        this.denominator = simplifiedFraction[1];
     }
     
     public int Numerator 
@@ -23,57 +21,49 @@
         get { return denominator; }
     }
 
-    public static  Fraction operator +(Fraction f) => SimplifyFraction(f);
-    public static Fraction operator -(Fraction f) => SimplifyFraction(new Fraction(-f.numerator,f.denominator));
+    public static Fraction operator +(Fraction f) => f;
+
+    public static Fraction operator -(Fraction f) =>new Fraction(-f.Numerator,f.Denominator);
+
     public static Fraction operator !(Fraction f) 
     {
-        if (f.numerator == 0)
+        if (f.Numerator == 0)
         {
             throw new InvalidOperationException("Denominator can not be zero.");
         }
-        return SimplifyFraction(new Fraction(f.denominator, f.numerator)); 
-    }
-    public static Fraction operator +(Fraction x, Fraction y) { 
-        Fraction sum= new Fraction (x.numerator*y.denominator + y.numerator*x.denominator, x.denominator* y.denominator);
-        return SimplifyFraction(sum);
-    }
-    public static Fraction operator -(Fraction x, Fraction y) {
-        Fraction sum = x +(-y);
-        return SimplifyFraction(sum);
+
+        return new Fraction(f.Denominator, f.Numerator); 
     }
 
-    public static Fraction operator *(Fraction x, Fraction y) {
-        Fraction result = new Fraction(x.numerator * y.numerator, x.denominator* y.denominator);
-        return SimplifyFraction(result);
+    public static Fraction operator +(Fraction x, Fraction y) { 
+        Fraction sum= new Fraction (x.Numerator*y.Denominator + y.Numerator*x.Denominator, x.Denominator* y.Denominator);
+        return sum;
     }
+
+    public static Fraction operator -(Fraction x, Fraction y) => -y + x;
+
+    public static Fraction operator *(Fraction x, Fraction y) {
+        Fraction result = new Fraction(x.Numerator * y.Numerator, x.Denominator* y.Denominator);
+        return result;
+    }
+
     public static Fraction operator /(Fraction x, Fraction y)
     {
         y = !y;
-        Fraction result = new Fraction(x.numerator * y.numerator, x.denominator * y.denominator);
-        return SimplifyFraction(result);
+        Fraction result = new Fraction(x.Numerator * y.Numerator, x.Denominator * y.Denominator);
+        return result;
     }
 
     public static bool operator ==(Fraction x, Fraction y)
     {
-        x = SimplifyFraction(x);
-        y = SimplifyFraction(y);
-        return (x.numerator == y.numerator) && (x.denominator == y.denominator); 
+        return (x.Numerator == y.Numerator) && (x.Denominator == y.Denominator); 
     }
 
-    public static bool operator !=(Fraction x, Fraction y) 
-    {
-        return !(x == y);
-    }
-
+    public static bool operator !=(Fraction x, Fraction y) => !(x == y);
+  
     #region overrids
-    public override string ToString()
-    {
-        Fraction f = SimplifyFraction(this);
-        int x = f.numerator;
-        int y = f.denominator;
-       
-        return $"{x}/{y}";
-    }
+    public override string ToString() => (this.Denominator!=1)?$"{this.Numerator}/{this.Denominator}":this.Numerator.ToString();
+    
 
     public override bool Equals(object? obj)
     {
@@ -86,23 +76,25 @@
     }
     #endregion
     #region helper methods
-    private static Fraction SimplifyFraction(Fraction f) {
-
-        int x = f.numerator;
-        int y = f.denominator;
-
-        if ((x > 0 && y < 0) || (x < 0 && y < 0))
+    public static int[] SimplifyFraction(int numerator, int denominator) 
+    {
+        if (denominator == 0)
         {
-            x = -x;
-            y = -y;
+            throw new ArgumentException("Denominator cannot be zero");
         }
 
-        int greatestCommonDivisior = GetGreatestCommonDivisior(x,y);
-        x /= greatestCommonDivisior;
-        y /= greatestCommonDivisior;
+        if ((numerator > 0 && denominator < 0) || (numerator < 0 && denominator < 0))
+        {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
 
-        f = new Fraction(x, y);
-        return f;
+        int greatestCommonDivisior = GetGreatestCommonDivisior(numerator, denominator);
+
+        numerator /= greatestCommonDivisior;
+        denominator /= greatestCommonDivisior;
+
+        return new int[2] { numerator,denominator};
     }
 
     private static int GetGreatestCommonDivisior(int a, int b )
